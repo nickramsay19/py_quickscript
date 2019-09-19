@@ -1,8 +1,6 @@
 import sys, subprocess
 
-'''
-    --- Custom Task Runner Utilities ---
-'''
+# Define some simple console output themes
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -13,6 +11,9 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+'''
+    --- Custom Task Runner Utilities ---
+'''
 class Task:
     def __init__(self,name=[],script='',description=''):
         if type(name) == str:

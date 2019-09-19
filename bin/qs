@@ -1,2 +1,3 @@
 #!/bin/bash
+# edit the file below to include the correct directory
 python3 "/Users/nickramsay/Documents/projects/py-macros/main.py" $@
