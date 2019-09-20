@@ -67,7 +67,7 @@ class TaskRunner:
 
             # Update with new output
             self.RemoveTask('help', False)
-            self.AddTask(Task(['h', 'help'], 'echo \"' + out + '\"'), False)
+            self.AddTask(Task(['h', 'help'], 'echo \"' + out + '\"', 'Shows this list of commands.'), False)
 
     def AddTask(self,task, __doUpdateHelp=True):
         if task != Task() and type(task) == Task:
