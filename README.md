@@ -11,8 +11,4 @@ Note: You must have python3 installed.
 ## Usage
 Use `qs <command>` to begin. Or use `qs help` to show the avalable commands.
 
-## Todo
-* Add a default command on `qs`
-* Add usage information on `qs help`
-
 

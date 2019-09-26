@@ -1,5 +1,16 @@
 import sys, subprocess
 
+# Define some simple console output themes
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 class Task:
     def __init__(self, name=[], script='', description=''):
         if type(name) == str:
@@ -60,7 +71,7 @@ class TaskRunner:
 
             # Update with new output
             self.RemoveTask('help', False)
-            self.AddTask(Task(['h', 'help'], 'echo \"' + out + '\"', 'Shows this list of commands.'), False)
+            self.AddTask(Task(['h', 'help'], 'echo \"Usage: qs <command> <command2> <command3> ...\" && printf \"\n\" && echo \"' + out + '\"', 'Shows this list of commands.'), False)
 
     def __updateVersion(self):
         self.AddTask(self.versionTask, _TaskRunner__doUpdateHelp=True)
