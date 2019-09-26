@@ -1,21 +1,7 @@
 import sys, subprocess
 
-# Define some simple console output themes
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-'''
-    --- Custom Task Runner Utilities ---
-'''
 class Task:
-    def __init__(self,name=[],script='',description=''):
+    def __init__(self, name=[], script='', description=''):
         if type(name) == str:
             self.name = [name]
         else:
@@ -25,12 +11,19 @@ class Task:
         self.description = description
 
 class TaskRunner:
-    def __init__(self, enableHelp=False):
+    def __init__(self, enableHelp=False, versionTask=None, defaultTask=None):
         self.tasks = []
         self.enableHelp = enableHelp
 
+        # update version if needed
+        self.versionTask = versionTask
+        if self.versionTask != None: self.__updateVersion()
+
         # update help if enabled
-        self.enableHelp
+        self.enableHelp = enableHelp
+
+        # setup default task
+        self.defaultTask = defaultTask
 
     def __updateHelp(self):
         if self.enableHelp:
@@ -69,8 +62,23 @@ class TaskRunner:
             self.RemoveTask('help', False)
             self.AddTask(Task(['h', 'help'], 'echo \"' + out + '\"', 'Shows this list of commands.'), False)
 
+    def __updateVersion(self):
+        self.AddTask(self.versionTask, _TaskRunner__doUpdateHelp=True)
+
     def AddTask(self,task, __doUpdateHelp=True):
         if task != Task() and type(task) == Task:
+
+            # check if command already exists
+            for current_task in self.tasks:
+
+                if type(current_task.name) == list:
+                    for name in current_task.name:
+                        if name == task.name or name in task.name:
+                            raise Exception('A task of name \"' + name + '\" already exists.')
+                elif current_task.name == task.name or current_task.name in task.name:
+                    raise Exception('A task of name \"' + name + '\" already exists.')
+                
+            # No errors, add new task
             self.tasks.append(task)
 
             # update help if enabled as new task has been added
@@ -79,9 +87,11 @@ class TaskRunner:
             raise Exception('AddTask must take a valid Task object.')
 
     def AddTasks(self, tasks):
-        # add proper error checking
-        for task in tasks:
-            self.AddTask(task)
+        for i, task in enumerate(tasks):
+            if i < len(tasks) - 1: 
+                self.AddTask(task, _TaskRunner__doUpdateHelp=False)
+            else: # only update help on the last task being added
+                self.AddTask(task, _TaskRunner__doUpdateHelp=True)
 
     def RemoveTask(self, name='', __doUpdateHelp=True):
         if type(name) == list:
@@ -102,6 +112,14 @@ class TaskRunner:
 
 
     def RunTask(self,name):
+
+        # check if default task
+        if name == '' and type(self.defaultTask) == Task:
+            for path in self.__execute(self.defaultTask.script):
+                print(path, end="")
+            return
+
+        # find the correct task and run it
         for task in self.tasks:
             if task.name == name or name in task.name:
                 for path in self.__execute(task.script):

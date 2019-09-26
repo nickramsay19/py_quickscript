@@ -1,8 +1,24 @@
-import sys, subprocess
+import sys
 from taskrunner import Task, TaskRunner
 
+# Define some simple console output themes
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 if __name__ == '__main__':
-    taskRunner = TaskRunner(enableHelp=True)
+
+    defaultTask = Task('default', 'qs version && printf \"\n\" && qs help')
+    versionTask = Task(['v', 'version'], 'echo \"QuickScript Version 1.3\nCreated by Nicholas Ramsay \"', 'Shows the current QuickScript version.')
+
+    taskRunner = TaskRunner(enableHelp=True, defaultTask=defaultTask, versionTask=versionTask)
     taskRunner.AddTasks([
         Task(['dock-reset', 'dockreset', 'dreset'], 'defaults delete com.apple.dock; killall Dock', 'Reset the dock to default i.e. on bottom with autohide disabled.'),
         Task(['dock-autohide-delay-0', 'dockquick', 'dquick'], 'defaults write com.apple.dock autohide-delay -float 0; defaults write com.apple.dock autohide-time-modifier -float 0.5; killall Dock', 'Enable quick dock showing with disabled animations.'),
@@ -15,7 +31,12 @@ if __name__ == '__main__':
 
     # Run the command line argument task
     try:
-        for task in sys.argv[1:]:
-            taskRunner.RunTask(task)
+        if len(sys.argv[1:]) < 1:
+            taskRunner.RunTask('')
+        else:
+            for arg in sys.argv[1:]:
+                taskRunner.RunTask(arg)
+            
     except Exception as e:
-        print(e)
+        print('\033[91m' + str(e) + '\033[0m\n')
+        taskRunner.RunTask('help')
