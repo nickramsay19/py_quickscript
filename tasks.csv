@@ -1,0 +1,8 @@
+dock-reset dockreset dreset, defaults delete com.apple.dock; killall Dock, Reset the dock to default i.e. on bottom with autohide disabled.
+dock-autohide-delay-0 dockquick dquick, defaults write com.apple.dock autohide-delay -float 0; defaults write com.apple.dock autohide-time-modifier -float 0.5; killall Dock, Enable quick dock showing with disabled animations.
+ock-orientation-left dockleft dleft, defaults write com.apple.dock orientation -string left; killall Dock, Places the dock on the left side of the screen.
+dock-orientation-right dockright dright, defaults write com.apple.dock orientation -string right; killall Dock, Places the dock on the right side of the screen.
+dock-orientation-bottom dockbottom dbottom, defaults write com.apple.dock orientation -string bottom; killall Dock, Places the dock on the bottom of the screen.
+dock-autohide-true dockhide dhide, defaults write com.apple.dock autohide -boolean true; killall Dock, Enables dock auto hiding.
+dock-autohide-false dockshow dshow, defaults write com.apple.dock autohide -boolean false; killall Dock, Enables dock auto hiding.
+sayhi, osascript ./hello-world.scpt, Say hello
